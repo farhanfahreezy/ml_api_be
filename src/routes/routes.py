@@ -1,8 +1,8 @@
 from flask_restful import Api
-from app.utils.errors import errors
-from app.controllers.train import Train
-from app.controllers.predict import Predict
-from app.controllers.status import Status
+from src.utils.errors import errors
+from src.controllers.train import Train
+from src.controllers.predict import Predict
+from src.controllers.status import Status
 
 routes = Api(
     catch_all_404s=True,

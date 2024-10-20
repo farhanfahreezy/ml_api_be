@@ -1,0 +1,211 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Machine Learning API",
+    "description": "API Documentation for Machine Learning Model Training and Prediction",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/train": {
+      "post": {
+        "summary": "Train the selected machine learning model with hyperparameter optimization using Iris dataset.",
+        "description": "Accepts the algorithm and hyperparameter grid for model training and performs grid search optimization.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Algorithm and hyperparameter grid for training the model.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "algorithm": {
+                  "type": "string",
+                  "description": "The machine learning algorithm to use (e.g., 'random_forest')."
+                },
+                "param_grid": {
+                  "type": "object",
+                  "properties": {
+                    "n_estimators": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "List of values for the number of trees in the forest."
+                    },
+                    "max_depth": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      },
+                      "description": "List of maximum depths of the tree."
+                    }
+                  },
+                  "required": ["n_estimators", "max_depth"]
+                }
+              },
+              "required": ["algorithm", "param_grid"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Model trained successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "best_params": {
+                  "type": "object",
+                  "properties": {
+                    "max_depth": {
+                      "type": "integer",
+                      "description": "The best maximum depth of the tree."
+                    },
+                    "n_estimators": {
+                      "type": "integer",
+                      "description": "The best number of trees in the forest."
+                    }
+                  },
+                  "required": ["max_depth", "n_estimators"]
+                },
+                "best_score": {
+                  "type": "number",
+                  "format": "float",
+                  "description": "The best accuracy score of the model."
+                },
+                "cv_results": {
+                  "type": "object",
+                  "properties": {
+                    "mean_test_score": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "description": "Mean test scores from cross-validation."
+                    },
+                    "params": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "max_depth": {
+                            "type": "integer"
+                          },
+                          "n_estimators": {
+                            "type": "integer"
+                          }
+                        }
+                      },
+                      "description": "Parameters tried in the grid search."
+                    },
+                    "std_test_score": {
+                      "type": "array",
+                      "items": {
+                        "type": "number",
+                        "format": "float"
+                      },
+                      "description": "Standard deviation of test scores."
+                    }
+                  },
+                  "required": ["mean_test_score", "params", "std_test_score"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/api/predict": {
+      "post": {
+        "summary": "Make predictions using the trained model.",
+        "description": "Accepts a JSON payload with input data (feature values) and returns predicted classes.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Input data for prediction.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "input": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "number"
+                    }
+                  },
+                  "description": "A list of feature value arrays for prediction."
+                }
+              },
+              "required": ["input"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Prediction successful.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "predicted_classes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "The predicted class based on the input features."
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input data."
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "summary": "Get the current status of the model.",
+        "description": "Returns whether the model is trained, the algorithm used, and key model details.",
+        "responses": {
+          "200": {
+            "description": "Status retrieved successfully.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "trained": {
+                  "type": "boolean",
+                  "description": "Indicates whether the model has been trained."
+                },
+                "algorithm": {
+                  "type": "string",
+                  "description": "The algorithm used for training the model."
+                },
+                "best_hyperparameters": {
+                  "type": "object",
+                  "description": "The best hyperparameters used for the trained model.",
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                },
+                "number_of_classes": {
+                  "type": "integer",
+                  "description": "The number of classes in the trained model."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Model not trained yet."
+          }
+        }
+      }
+    }
+  }
+}
