@@ -3,7 +3,8 @@ from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
-from jwt.exceptions import InvalidSignatureError
+from flask_cors import CORS
+
 from src.config import config
 from src.routes.routes import routes
 from src.utils.db import db
@@ -12,6 +13,8 @@ from src.utils.db import db
 app = Flask(__name__)
 app.config.from_object(config.settings[os.environ.get('APPLICATION_ENV', 'default')])
 app.register_blueprint(get_swaggerui_blueprint('/api/docs', '/static/api-docs.json',), url_prefix='/api/docs')
+
+CORS(app)
 
 
 jwt = JWTManager(app)
