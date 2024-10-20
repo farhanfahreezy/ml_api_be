@@ -4,7 +4,7 @@ from src.controllers.train import TrainController
 from src.controllers.predict import PredictController
 from src.controllers.status import StatusController
 from src.controllers.user import UserController
-from src.controllers.auth import SignInController, SignUpController
+from src.controllers.auth import SignInController, SignUpController, SelfAuth
 
 from src.middleware.jwt_auth import jwt_auth
 
@@ -20,5 +20,6 @@ routes.add_resource(StatusController, '/status')
 
 routes.add_resource(SignInController, '/auth/sign-in')
 routes.add_resource(SignUpController, '/auth/sign-up')
+routes.add_resource(SelfAuth, '/auth/self')
 
 routes.add_resource(UserController, '/user')

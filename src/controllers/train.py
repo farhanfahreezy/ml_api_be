@@ -1,10 +1,12 @@
 from flask import request, jsonify
 from flask_restful import Resource
+from flask_jwt_extended import get_jwt_identity
 from sklearn.datasets import load_iris
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 import joblib
+import os
 
 from src.middleware.jwt_auth import jwt_auth
 
@@ -49,8 +51,13 @@ class TrainController(Resource):
                 'std_test_score': cv_results['std_test_score'].tolist()  # Standard deviation of accuracy
             }
 
-            # Save the model for future predictions
-            joblib.dump(best_model, './public/best_model.pkl')
+            identity = get_jwt_identity()
+            user_id = identity['id']
+            directory = f'./public/{user_id}'
+            os.makedirs(directory, exist_ok=True)
+
+            # Save the model
+            joblib.dump(best_model, os.path.join(directory, 'best_model.pkl'))
 
             return jsonify({
                 "best_params": best_params,

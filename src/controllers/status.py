@@ -1,5 +1,6 @@
 from flask_restful import Resource
 import joblib
+from flask_jwt_extended import get_jwt_identity
 
 from src.middleware.jwt_auth import jwt_auth
 
@@ -8,7 +9,9 @@ class StatusController(Resource):
     def get(self):
         # Load the trained model
         try:
-            model = joblib.load('./public/best_model.pkl')
+            identity = get_jwt_identity()
+            user_id = identity['id']  
+            model = joblib.load(f'./public/{user_id}/best_model.pkl')
         
             # Extract model details
             model_type = type(model).__name__
@@ -24,15 +27,15 @@ class StatusController(Resource):
 
             # Return model status
             return {
-                "status": "Model is trained.",
+                "status": "Trained",
                 "model_type": model_type,
                 "best_params": best_params,
-                "num_classes": num_classes
+                "num_classes": int(num_classes)
             }, 200
     
         except FileNotFoundError:
-            return {"error": "No trained model found. Please train a model first."}, 404
+            return {"status": "NotTrained"}, 202
         
         except Exception as e:
             # Catch any other exception
-            return {"error": f"An error occurred: {str(e)}"}, 500
+            return {"status": f"An error occurred: {str(e)}"}, 500
