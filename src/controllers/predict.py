@@ -3,7 +3,10 @@ from flask_restful import Resource
 import joblib
 import numpy as np
 
+from src.middleware.jwt_auth import jwt_auth
+
 class PredictController(Resource):
+    @jwt_auth
     def post(self):
         # Load the trained model
         try:

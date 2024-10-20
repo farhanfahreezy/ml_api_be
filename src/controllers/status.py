@@ -1,7 +1,10 @@
 from flask_restful import Resource
 import joblib
 
+from src.middleware.jwt_auth import jwt_auth
+
 class StatusController(Resource):
+    @jwt_auth
     def get(self):
         # Load the trained model
         try:

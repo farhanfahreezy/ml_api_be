@@ -6,7 +6,10 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 
+from src.middleware.jwt_auth import jwt_auth
+
 class TrainController(Resource):
+    @jwt_auth
     def post(self):
         try:
             # Get request body

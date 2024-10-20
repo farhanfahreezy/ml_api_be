@@ -52,7 +52,7 @@ class UserController(Resource):
             new_user = User(
                 name=name,
                 username=username,
-                password=str(hashed_password),
+                password=hashed_password.decode('utf-8'),
                 email=email
             )
         
