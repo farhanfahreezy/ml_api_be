@@ -9,6 +9,11 @@ psycopg2-binary = "*"
 flask-swagger-ui = "*"
 flask-restful = "*"
 scikit-learn = "*"
+alembic = "*"
+sqlalchemy = "*"
+flask-migrate = "*"
+werkzeug = "*"
+bcrypt = "*"
 
 [dev-packages]
 pytest = "*"

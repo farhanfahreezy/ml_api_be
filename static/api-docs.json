@@ -21,7 +21,8 @@
               "properties": {
                 "algorithm": {
                   "type": "string",
-                  "description": "The machine learning algorithm to use (e.g., 'random_forest')."
+                  "description": "The machine learning algorithm to use (e.g., 'random_forest').",
+                  "example": "random_forest"
                 },
                 "param_grid": {
                   "type": "object",
@@ -31,14 +32,16 @@
                       "items": {
                         "type": "integer"
                       },
-                      "description": "List of values for the number of trees in the forest."
+                      "description": "List of values for the number of trees in the forest.",
+                      "example": [50, 100, 200]
                     },
                     "max_depth": {
                       "type": "array",
                       "items": {
                         "type": "integer"
                       },
-                      "description": "List of maximum depths of the tree."
+                      "description": "List of maximum depths of the tree.",
+                      "example": [5, 10, 20]
                     }
                   },
                   "required": ["n_estimators", "max_depth"]
@@ -59,11 +62,13 @@
                   "properties": {
                     "max_depth": {
                       "type": "integer",
-                      "description": "The best maximum depth of the tree."
+                      "description": "The best maximum depth of the tree.",
+                      "example": 5
                     },
                     "n_estimators": {
                       "type": "integer",
-                      "description": "The best number of trees in the forest."
+                      "description": "The best number of trees in the forest.",
+                      "example": 50
                     }
                   },
                   "required": ["max_depth", "n_estimators"]
@@ -71,7 +76,8 @@
                 "best_score": {
                   "type": "number",
                   "format": "float",
-                  "description": "The best accuracy score of the model."
+                  "description": "The best accuracy score of the model.",
+                  "example": 0.9666666666666668
                 },
                 "cv_results": {
                   "type": "object",
@@ -82,7 +88,11 @@
                         "type": "number",
                         "format": "float"
                       },
-                      "description": "Mean test scores from cross-validation."
+                      "description": "Mean test scores from cross-validation.",
+                      "example": [
+                        0.9666666666666668, 0.96, 0.9666666666666668, 0.96,
+                        0.96, 0.9666666666666668, 0.96, 0.96, 0.96
+                      ]
                     },
                     "params": {
                       "type": "array",
@@ -90,10 +100,12 @@
                         "type": "object",
                         "properties": {
                           "max_depth": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 5
                           },
                           "n_estimators": {
-                            "type": "integer"
+                            "type": "integer",
+                            "example": 50
                           }
                         }
                       },
@@ -105,7 +117,14 @@
                         "type": "number",
                         "format": "float"
                       },
-                      "description": "Standard deviation of test scores."
+                      "description": "Standard deviation of test scores.",
+                      "example": [
+                        0.02108185106778919, 0.024944382578492935,
+                        0.02108185106778919, 0.024944382578492935,
+                        0.024944382578492935, 0.02108185106778919,
+                        0.024944382578492935, 0.024944382578492935,
+                        0.024944382578492935
+                      ]
                     }
                   },
                   "required": ["mean_test_score", "params", "std_test_score"]
@@ -140,7 +159,12 @@
                       "type": "number"
                     }
                   },
-                  "description": "A list of feature value arrays for prediction."
+                  "description": "A list of feature value arrays for prediction.",
+                  "example": [
+                    [5.8, 2.7, 3.9, 1.2],
+                    [6.9, 3.1, 5.1, 2.3],
+                    [5.8, 2.7, 3.9, 1.2]
+                  ]
                 }
               },
               "required": ["input"]
@@ -153,18 +177,32 @@
             "schema": {
               "type": "object",
               "properties": {
-                "predicted_classes": {
+                "prediction": {
                   "type": "array",
                   "items": {
-                    "type": "string",
+                    "type": "integer",
                     "description": "The predicted class based on the input features."
-                  }
+                  },
+                  "example": [1, 2, 1]
                 }
               }
             }
           },
           "400": {
             "description": "Invalid input data."
+          },
+          "404": {
+            "description": "No trained model found.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message if no trained model is found.",
+                  "example": "No trained model found. Please train a model first."
+                }
+              }
+            }
           }
         }
       }
@@ -179,30 +217,118 @@
             "schema": {
               "type": "object",
               "properties": {
-                "trained": {
-                  "type": "boolean",
-                  "description": "Indicates whether the model has been trained."
-                },
-                "algorithm": {
+                "status": {
                   "type": "string",
-                  "description": "The algorithm used for training the model."
+                  "description": "Indicates if the model is trained.",
+                  "example": "Model is trained."
                 },
-                "best_hyperparameters": {
+                "model_type": {
+                  "type": "string",
+                  "description": "The algorithm used for training the model.",
+                  "example": "RandomForestClassifier"
+                },
+                "best_params": {
                   "type": "object",
                   "description": "The best hyperparameters used for the trained model.",
-                  "additionalProperties": {
-                    "type": "number"
+                  "properties": {
+                    "bootstrap": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "ccp_alpha": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "class_weight": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "criterion": {
+                      "type": "string",
+                      "example": "gini"
+                    },
+                    "max_depth": {
+                      "type": "integer",
+                      "example": 5
+                    },
+                    "max_features": {
+                      "type": "string",
+                      "example": "sqrt"
+                    },
+                    "max_leaf_nodes": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "max_samples": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "min_impurity_decrease": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "min_samples_leaf": {
+                      "type": "integer",
+                      "example": 1
+                    },
+                    "min_samples_split": {
+                      "type": "integer",
+                      "example": 2
+                    },
+                    "min_weight_fraction_leaf": {
+                      "type": "number",
+                      "example": 0
+                    },
+                    "monotonic_cst": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "n_estimators": {
+                      "type": "integer",
+                      "example": 50
+                    },
+                    "n_jobs": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "oob_score": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "random_state": {
+                      "type": "string",
+                      "example": "null"
+                    },
+                    "verbose": {
+                      "type": "integer",
+                      "example": 0
+                    },
+                    "warm_start": {
+                      "type": "boolean",
+                      "example": false
+                    }
                   }
                 },
-                "number_of_classes": {
+                "num_classes": {
                   "type": "integer",
-                  "description": "The number of classes in the trained model."
+                  "description": "The number of classes in the trained model.",
+                  "example": 3
                 }
               }
             }
           },
           "404": {
-            "description": "Model not trained yet."
+            "description": "No trained model found.",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Error message if no trained model is found.",
+                  "example": "No trained model found. Please train a model first."
+                }
+              }
+            }
           }
         }
       }

@@ -11,13 +11,6 @@ class Config:
 
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
     SQLALCHEMY_TRACK_MODIFICATIONS = True
-    SQLALCHEMY_ENGINE_OPTIONS = {
-        'executemany_mode': 'batch',
-        'client_encoding': 'utf8',
-        'case_sensitive': False,
-        'echo': True,
-        'echo_pool': True
-    }
 
 
 class DevelopmentConfig(Config):
