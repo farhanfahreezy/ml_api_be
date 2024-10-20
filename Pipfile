@@ -6,10 +6,9 @@ name = "pypi"
 [packages]
 flask = "*"
 psycopg2-binary = "*"
-flask-sqlalchemy = "*"
 flask-swagger-ui = "*"
-flask-migrate = "*"
 flask-restful = "*"
+scikit-learn = "*"
 
 [dev-packages]
 pytest = "*"
