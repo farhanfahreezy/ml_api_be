@@ -9,6 +9,8 @@ This project is a Flask-based backend API with PostgreSQL as the database, utili
 - `/train`: Train a machine learning model.
 - `/predict`: Predict based on trained models.
 - `/status`: Check the status of the training/prediction tasks.
+- `/auth/sign-in` : Sign in using credentials.
+- `/auth/sign-up` : Register user
 - Swagger UI: You can test these API endpoints via the Swagger docs, available at `localhost:5000/api-docs`.
 
 # Requirements
