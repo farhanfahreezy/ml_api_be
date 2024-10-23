@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from flask_restful import Resource
+from flask_jwt_extended import get_jwt_identity
 import joblib
 import numpy as np
 
@@ -10,7 +11,9 @@ class PredictController(Resource):
     def post(self):
         # Load the trained model
         try:
-            model = joblib.load('./public/best_model.pkl')
+            identity = get_jwt_identity()
+            user_id = identity['id']  
+            model = joblib.load(f'./public/{user_id}/best_model.pkl')
        
             # Get request body
             body = request.get_json()

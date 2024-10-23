@@ -35,8 +35,11 @@ class TrainController(Resource):
             X = iris.data
             y = iris.target
 
+            # remove empty param
+            filtered_param_grid = {k: v for k, v in param_grid.items() if v}
+
             # Perform GridSearchCV for hyperparameter optimization
-            grid_search = GridSearchCV(estimator=model, param_grid=param_grid, cv=5, n_jobs=-1, verbose=2)
+            grid_search = GridSearchCV(estimator=model, param_grid=filtered_param_grid, cv=5, n_jobs=-1, verbose=2)
             grid_search.fit(X, y)
 
             # Get the best parameters, accuracy, and cross-validation results
